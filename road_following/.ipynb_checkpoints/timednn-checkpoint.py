@@ -18,11 +18,19 @@ import numpy as np
 mean = torch.Tensor([0.485, 0.456, 0.406]).cuda().half()
 std = torch.Tensor([0.229, 0.224, 0.225]).cuda().half()
 
+def get_x(path):
+    """Gets the x value from the image filename"""
+    return (float(int(path[3:6])) - 50.0) / 50.0
+
+def get_y(path):
+    """Gets the y value from the image filename"""
+    return (float(int(path[7:10])) - 50.0) / 50.0
+
 def preprocess(image):
     image = PIL.Image.open(image)
     image = transforms.functional.to_tensor(image).to(device).half()
     image.sub_(mean[:, None, None]).div_(std[:, None, None])
-    print("success pre")
+#     print("success pre")
     return image[None, ...]
 
 
@@ -36,12 +44,12 @@ def runNetwork(image):
     x = xy[0]
     y = (0.5 - xy[1]) / 2.0
     angle = np.arctan2(x, y)
-    print(x, "   ", y)
+    print(x, "   ", xy[1])
     
 import time
 import os
 
-runNetwork(os.path.join('images', 'image_1.jpeg'))
+runNetwork(os.path.join('images', 'xy_050_072.jpg'))
 total_time = 0
 # averagetime = 0
 count =0 
@@ -51,16 +59,17 @@ for filename in os.listdir('images'):
     if os.path.isfile(name):
         start_time = time.time()
         runNetwork(name)
-        print(name)
+#         print(name)
+        print(get_x(filename), get_y(filename))
         count +=1
         
         
         timeOneIteration = time.time() - start_time 
-        print(timeOneIteration, "Seconds")
+        # print(timeOneIteration, "Seconds")
         total_time += timeOneIteration
         
     else:
         print("No file found")
         
-print(total_time)
+# print(total_time)
 print(total_time/count)
