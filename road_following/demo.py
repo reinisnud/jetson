@@ -6,8 +6,7 @@ model.fc = torch.nn.Linear(512, 2)
 model.load_state_dict(torch.load('best_steering_model_xyRes18.pth'))
 device = torch.device('cuda')
 model = model.to(device)
-# print(model.eval().half())
-model = model.eval().half()
+print(model.eval().half())
 
 
 import torchvision.transforms as transforms
@@ -33,11 +32,11 @@ from jetbot import Camera, bgr8_to_jpeg
 
 camera = Camera()
 
-image_widget = ipywidgets.Image()
+# image_widget = ipywidgets.Image()
 
-traitlets.dlink((camera, 'value'), (image_widget, 'value'), transform=bgr8_to_jpeg)
+# traitlets.dlink((camera, 'value'), (image_widget, 'value'), transform=bgr8_to_jpeg)
 
-display(image_widget)
+# display(image_widget)
 
 from jetbot import Robot
 
@@ -58,9 +57,10 @@ steering_bias_slider = 0#ipywidgets.FloatSlider(min=-0.3, max=0.3, step=0.01, va
 
 angle = 0.0
 
-
+import time
 def execute(cam):
     global angle
+    start_time = time.time()
     image = cam['new']
     xy = model(preprocess(image)).detach().float().cpu().numpy().flatten()
     x = xy[0]
@@ -75,6 +75,8 @@ def execute(cam):
     # angle_last = angle    
     robot.left_motor.value = max(min(speed + pid, 1.0), 0.0)
     robot.right_motor.value = max(min(speed - pid, 1.0), 0.0)
+    timeOneIteration = time.time() - start_time 
+    print(timeOneIteration)
     
 execute({'new': camera.value})
 
