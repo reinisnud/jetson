@@ -1,9 +1,18 @@
 import torchvision
 import torch
 
-model = torchvision.models.resnet18(pretrained=False)
-model.fc = torch.nn.Linear(512, 2)
-model.load_state_dict(torch.load('best_steering_model_xyRes18.pth'))
+
+model = torch.hub.load('pytorch/vision:v0.6.0', 'mobilenet_v2', pretrained=False)
+lastlayer = torch.nn.Linear(1000, 2)
+model = torch.nn.Sequential(model, lastlayer)
+
+# model = torchvision.models.squeezenet1_0(pretrained=False)
+# model.classifier[1] = torch.nn.Conv2d(512, 2, kernel_size=(1,1), stride=(1,1))
+# model.num_classes = 2
+
+
+# model.fc = torch.nn.Linear(512, 2)
+model.load_state_dict(torch.load('best_steering_model_xymobilenet.pth'))
 device = torch.device('cuda')
 model = model.to(device)
 print(model.eval().half())
