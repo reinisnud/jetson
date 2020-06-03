@@ -2,155 +2,6 @@ import torchvision
 import torch
 import torch.nn as nn 
 
-class Net3(nn.Module):
-    def __init__(self):
-        super(Net3, self).__init__()
-        
-        # Declare all the layers for feature extraction
-        self.features = nn.Sequential(
-                                      nn.Conv2d(in_channels=3,
-                                                out_channels=64,
-                                                kernel_size=3,
-                                                stride=1,
-                                                padding=1), 
-                                      # nn.BatchNorm2d()
-
-
-                                      nn.ReLU(inplace=True),
-                                      # nn.Conv2d(in_channels=64,
-                                      #           out_channels=64,
-                                      #           kernel_size=3,
-                                      #           stride=1,
-                                      #           padding=1), 
-                                      # nn.ReLU(inplace=True),
-                                      nn.MaxPool2d(2, 2),
-
-
-                                    nn.Conv2d(in_channels=64,
-                                                out_channels=128,
-                                                kernel_size=3,
-                                                stride=1,
-                                                padding=1), 
-
-
-                                      nn.ReLU(inplace=True),
-                                      # nn.Conv2d(in_channels=128,
-                                      #           out_channels=128,
-                                      #           kernel_size=3,
-                                      #           stride=1,
-                                      #           padding=1), 
-                                      # nn.ReLU(inplace=True),
-                                      nn.MaxPool2d(2, 2),
-
-
-                                      nn.Conv2d(in_channels=128,
-                                                out_channels=256,
-                                                kernel_size=3,
-                                                stride=1,
-                                                padding=1), 
-
-
-                                      nn.ReLU(inplace=True),
-                                      # nn.Conv2d(in_channels=256,
-                                      #           out_channels=256,
-                                      #           kernel_size=3,
-                                      #           stride=1,
-                                      #           padding=1), 
-                                      # nn.ReLU(inplace=True),
-                                      # nn.Conv2d(in_channels=256,
-                                      #           out_channels=256,
-                                      #           kernel_size=3,
-                                      #           stride=1,
-                                      #           padding=1), 
-                                      # nn.ReLU(inplace=True),
-                                      nn.MaxPool2d(2, 2),
-
-
-                                       nn.Conv2d(in_channels=256,
-                                                out_channels=512,
-                                                kernel_size=3,
-                                                stride=1,
-                                                padding=1), 
-
-
-                                      nn.ReLU(inplace=True),
-                                      # nn.Conv2d(in_channels=512,
-                                      #           out_channels=512,
-                                      #           kernel_size=3,
-                                      #           stride=1,
-                                      #           padding=1), 
-                                      # nn.ReLU(inplace=True),
-                                      # nn.Conv2d(in_channels=512,
-                                      #           out_channels=512,
-                                      #           kernel_size=3,
-                                      #           stride=1,
-                                      #           padding=1), 
-                                      # nn.ReLU(inplace=True),
-                                      nn.MaxPool2d(2, 2),
-
-                                      #  nn.Conv2d(in_channels=512,
-                                      #           out_channels=512,
-                                      #           kernel_size=3,
-                                      #           stride=1,
-                                      #           padding=1), 
-
-
-                                      # nn.ReLU(inplace=True),
-                                      # nn.Conv2d(in_channels=512,
-                                      #           out_channels=512,
-                                      #           kernel_size=3,
-                                      #           stride=1,
-                                      #           padding=1), 
-                                      # nn.ReLU(inplace=True),
-                                      # nn.Conv2d(in_channels=512,
-                                      #           out_channels=512,
-                                      #           kernel_size=3,
-                                      #           stride=1,
-                                      #           padding=1), 
-                                      # nn.ReLU(inplace=True),
-                                      nn.MaxPool2d(2, 2)
-
-
-
-
-
-
-
-
-                                      )
-        
-        # Declare all the layers for classification
-        self.classifier = nn.Sequential(
-            nn.Linear(4608, 2))
-            # nn.ReLU(inplace=True),
-            # nn.Dropout(p=0.5),
-            # nn.Linear(100, 10),
-            # nn.ReLU(inplace=True),
-            # nn.Dropout(p=0.5),
-            # nn.Linear(10, 2))
-        # 
-    def forward(self, x):
-      
-        # Apply the feature extractor in the input
-        x = self.features(x)
-        
-        # Squeeze the three spatial dimensions in one
-        x = x.view(-1, 4608)
-        
-        # Classify the images
-        x = self.classifier(x)
-
-        return x
-
-
-
-
-
-
-
-
-
-
 class Net2(nn.Module):
     def __init__(self):
         super(Net2, self).__init__()
@@ -162,251 +13,36 @@ class Net2(nn.Module):
                                                 kernel_size=3,
                                                 stride=1,
                                                 padding=1), 
-                                      # nn.BatchNorm2d()
-
-
-                                      nn.ReLU(inplace=True),
-                                      # nn.Conv2d(in_channels=64,
-                                      #           out_channels=64,
-                                      #           kernel_size=3,
-                                      #           stride=1,
-                                      #           padding=1), 
-                                      # nn.ReLU(inplace=True),
+                                     nn.ReLU(inplace=True),
                                       nn.MaxPool2d(2, 2),
-
-
                                     nn.Conv2d(in_channels=64,
                                                 out_channels=128,
                                                 kernel_size=3,
                                                 stride=1,
                                                 padding=1), 
-
-
-                                      nn.ReLU(inplace=True),
-                                      # nn.Conv2d(in_channels=128,
-                                      #           out_channels=128,
-                                      #           kernel_size=3,
-                                      #           stride=1,
-                                      #           padding=1), 
-                                      # nn.ReLU(inplace=True),
+                                      nn.ReLU(inplace=True),        
                                       nn.MaxPool2d(2, 2),
-
-
                                       nn.Conv2d(in_channels=128,
                                                 out_channels=256,
                                                 kernel_size=3,
                                                 stride=1,
                                                 padding=1), 
-
-
                                       nn.ReLU(inplace=True),
-                                      # nn.Conv2d(in_channels=256,
-                                      #           out_channels=256,
-                                      #           kernel_size=3,
-                                      #           stride=1,
-                                      #           padding=1), 
-                                      # nn.ReLU(inplace=True),
-                                      # nn.Conv2d(in_channels=256,
-                                      #           out_channels=256,
-                                      #           kernel_size=3,
-                                      #           stride=1,
-                                      #           padding=1), 
-                                      # nn.ReLU(inplace=True),
                                       nn.MaxPool2d(2, 2),
-
-
                                        nn.Conv2d(in_channels=256,
                                                 out_channels=512,
                                                 kernel_size=3,
                                                 stride=1,
                                                 padding=1), 
-
-
-                                      nn.ReLU(inplace=True),
-                                      # nn.Conv2d(in_channels=512,
-                                      #           out_channels=512,
-                                      #           kernel_size=3,
-                                      #           stride=1,
-                                      #           padding=1), 
-                                      # nn.ReLU(inplace=True),
-                                      # nn.Conv2d(in_channels=512,
-                                      #           out_channels=512,
-                                      #           kernel_size=3,
-                                      #           stride=1,
-                                      #           padding=1), 
-                                      # nn.ReLU(inplace=True),
-                                      nn.MaxPool2d(2, 2),
-
-                                       nn.Conv2d(in_channels=512,
-                                                out_channels=512,
-                                                kernel_size=3,
-                                                stride=1,
-                                                padding=1), 
-
-
-                                      nn.ReLU(inplace=True),
-                                      # nn.Conv2d(in_channels=512,
-                                      #           out_channels=512,
-                                      #           kernel_size=3,
-                                      #           stride=1,
-                                      #           padding=1), 
-                                      # nn.ReLU(inplace=True),
-                                      # nn.Conv2d(in_channels=512,
-                                      #           out_channels=512,
-                                      #           kernel_size=3,
-                                      #           stride=1,
-                                      #           padding=1), 
-                                      # nn.ReLU(inplace=True),
-                                      nn.MaxPool2d(2, 2)
-
-
-
-
-
-
-
-
-                                      )
-        
-        # Declare all the layers for classification
-        self.classifier = nn.Sequential(
-            nn.Linear(4608, 2))
-            # nn.ReLU(inplace=True),
-            # nn.Dropout(p=0.5),
-            # nn.Linear(100, 10),
-            # nn.ReLU(inplace=True),
-            # nn.Dropout(p=0.5),
-            # nn.Linear(10, 2))
-        # 
-    def forward(self, x):
-      
-        # Apply the feature extractor in the input
-        x = self.features(x)
-        
-        # Squeeze the three spatial dimensions in one
-        x = x.view(-1, 4608)
-        
-        # Classify the images
-        x = self.classifier(x)
-
-        return x
-
-class Net(nn.Module):
-    def __init__(self):
-        super(Net, self).__init__()
-        
-        # Declare all the layers for feature extraction
-        self.features = nn.Sequential(
-                                      nn.Conv2d(in_channels=3,
-                                                out_channels=64,
-                                                kernel_size=3,
-                                                stride=1,
-                                                padding=1), 
-                                      # nn.BatchNorm2d()
-
-
-                                      nn.ReLU(inplace=True),
-                                      nn.Conv2d(in_channels=64,
-                                                out_channels=64,
-                                                kernel_size=3,
-                                                stride=1,
-                                                padding=1), 
                                       nn.ReLU(inplace=True),
                                       nn.MaxPool2d(2, 2),
-
-
-                                    nn.Conv2d(in_channels=64,
-                                                out_channels=128,
-                                                kernel_size=3,
-                                                stride=1,
-                                                padding=1), 
-
-
-                                      nn.ReLU(inplace=True),
-                                      nn.Conv2d(in_channels=128,
-                                                out_channels=128,
-                                                kernel_size=3,
-                                                stride=1,
-                                                padding=1), 
-                                      nn.ReLU(inplace=True),
-                                      nn.MaxPool2d(2, 2),
-
-
-                                      nn.Conv2d(in_channels=128,
-                                                out_channels=256,
-                                                kernel_size=3,
-                                                stride=1,
-                                                padding=1), 
-
-
-                                      nn.ReLU(inplace=True),
-                                      nn.Conv2d(in_channels=256,
-                                                out_channels=256,
-                                                kernel_size=3,
-                                                stride=1,
-                                                padding=1), 
-                                      nn.ReLU(inplace=True),
-                                      # nn.Conv2d(in_channels=256,
-                                      #           out_channels=256,
-                                      #           kernel_size=3,
-                                      #           stride=1,
-                                      #           padding=1), 
-                                      # nn.ReLU(inplace=True),
-                                      nn.MaxPool2d(2, 2),
-
-
-                                       nn.Conv2d(in_channels=256,
-                                                out_channels=512,
-                                                kernel_size=3,
-                                                stride=1,
-                                                padding=1), 
-
-
-                                      nn.ReLU(inplace=True),
-                                      nn.Conv2d(in_channels=512,
-                                                out_channels=512,
-                                                kernel_size=3,
-                                                stride=1,
-                                                padding=1), 
-                                      nn.ReLU(inplace=True),
-                                      # nn.Conv2d(in_channels=512,
-                                      #           out_channels=512,
-                                      #           kernel_size=3,
-                                      #           stride=1,
-                                      #           padding=1), 
-                                      # nn.ReLU(inplace=True),
-                                      nn.MaxPool2d(2, 2),
-
-                                       nn.Conv2d(in_channels=512,
-                                                out_channels=512,
-                                                kernel_size=3,
-                                                stride=1,
-                                                padding=1), 
-
-
-                                      nn.ReLU(inplace=True),
-                                      nn.Conv2d(in_channels=512,
-                                                out_channels=512,
-                                                kernel_size=3,
-                                                stride=1,
-                                                padding=1), 
-                                      nn.ReLU(inplace=True),
-                                      # nn.Conv2d(in_channels=512,
-                                      #           out_channels=512,
-                                      #           kernel_size=3,
-                                      #           stride=1,
-                                      #           padding=1), 
-                                      # nn.ReLU(inplace=True),
-                                      nn.MaxPool2d(2, 2)
-
-
-
-
-
-
-
-
-                                      )
+#                                        nn.Conv2d(in_channels=512,
+#                                                 out_channels=512,
+#                                                 kernel_size=3,
+#                                                 stride=1,
+#                                                 padding=1), 
+#                                       nn.ReLU(inplace=True),
+                                      nn.MaxPool2d(2, 2))
         
         # Declare all the layers for classification
         self.classifier = nn.Sequential(
@@ -428,7 +64,7 @@ class Net(nn.Module):
 # lastlayer = torch.nn.Linear(1000, 2)
 # model = torch.nn.Sequential(model, lastlayer)
 
-model = Net3()
+model = Net2()
 # model = torchvision.models.resnet18(pretrained=False)
 # model.classifier[1] = torch.nn.Conv2d(512, 2, kernel_size=(1,1), stride=(1,1))
 model.num_classes = 2
@@ -478,7 +114,7 @@ robot = Robot()
 
 
 speed = 0.20#ipywidgets.FloatSlider(min=0.0, max=1.0, step=0.01, description='speed gain')
-steering_gain_slider = 0.05#ipywidgets.FloatSlider(min=0.0, max=1.0, step=0.01, value=0.2, description='steering gain')
+steering_gain_slider = 0.04#ipywidgets.FloatSlider(min=0.0, max=1.0, step=0.01, value=0.2, description='steering gain')
 steering_dgain_slider = 0 #ipywidgets.FloatSlider(min=0.0, max=0.5, step=0.001, value=0.0, description='steering kd')
 steering_bias_slider = 0#ipywidgets.FloatSlider(min=-0.3, max=0.3, step=0.01, value=0.0, description='steering bias')
 

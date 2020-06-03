@@ -1,9 +1,70 @@
 import torchvision
 import torch
+import torch.nn as nn 
 
-model = torchvision.models.resnet18(pretrained=False)
-model.fc = torch.nn.Linear(512, 2)
-model.load_state_dict(torch.load('best_steering_model_xyRes18.pth'))
+class Net2(nn.Module):
+    def __init__(self):
+        super(Net2, self).__init__()
+        
+        # Declare all the layers for feature extraction
+        self.features = nn.Sequential(
+                                      nn.Conv2d(in_channels=3,
+                                                out_channels=64,
+                                                kernel_size=3,
+                                                stride=1,
+                                                padding=1), 
+                                     nn.ReLU(inplace=True),
+                                      nn.MaxPool2d(2, 2),
+                                    nn.Conv2d(in_channels=64,
+                                                out_channels=128,
+                                                kernel_size=3,
+                                                stride=1,
+                                                padding=1), 
+                                      nn.ReLU(inplace=True),        
+                                      nn.MaxPool2d(2, 2),
+                                      nn.Conv2d(in_channels=128,
+                                                out_channels=256,
+                                                kernel_size=3,
+                                                stride=1,
+                                                padding=1), 
+                                      nn.ReLU(inplace=True),
+                                      nn.MaxPool2d(2, 2),
+                                       nn.Conv2d(in_channels=256,
+                                                out_channels=512,
+                                                kernel_size=3,
+                                                stride=1,
+                                                padding=1), 
+                                      nn.ReLU(inplace=True),
+                                      nn.MaxPool2d(2, 2),
+#                                        nn.Conv2d(in_channels=512,
+#                                                 out_channels=512,
+#                                                 kernel_size=3,
+#                                                 stride=1,
+#                                                 padding=1), 
+#                                       nn.ReLU(inplace=True),
+                                      nn.MaxPool2d(2, 2))
+        
+        # Declare all the layers for classification
+        self.classifier = nn.Sequential(
+            nn.Linear(4608, 2))
+    def forward(self, x):
+      
+        # Apply the feature extractor in the input
+        x = self.features(x)
+        
+        # Squeeze the three spatial dimensions in one
+        x = x.view(-1, 4608)
+        
+        # Classify the images
+        x = self.classifier(x)
+
+        return x
+
+# model = torchvision.models.resnet18(pretrained=False)
+# model.fc = torch.nn.Linear(512, 2)
+
+model = Net2()
+model.load_state_dict(torch.load('best_steering_model_xycustomCNN3.pth'))
 device = torch.device('cuda')
 model = model.to(device)
 print(model.eval().half())
@@ -14,6 +75,10 @@ import torch.nn.functional as F
 import cv2
 import PIL.Image
 import numpy as np
+
+
+
+
 
 mean = torch.Tensor([0.485, 0.456, 0.406]).cuda().half()
 std = torch.Tensor([0.229, 0.224, 0.225]).cuda().half()
@@ -49,7 +114,7 @@ def runNetwork(image):
 import time
 import os
 
-runNetwork(os.path.join('images', 'xy_050_072.jpg'))
+runNetwork(os.path.join('images', 'xy_000_059_d9cd0272-993b-11ea-8fac-16f63a1aa8c9.jpg'))
 total_time = 0
 # averagetime = 0
 count =0 
