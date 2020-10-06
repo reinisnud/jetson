@@ -119,7 +119,40 @@ steering_dgain_slider = 0
 steering_bias_slider = 0
 
 
+def calculateAngle(x,y):
+    fPivYLimit = 80
 
+    # TEMP VARIABLES
+    nMotPremixL = 0 # Motor (left)  premixed output        (-128..+127)
+    nMotPremixR = 0 # Motor (right) premixed output        (-128..+127)
+    nPivSpeed = 0   # Pivot Speed                          (-128..+127)
+    fPivScale = 0.0 # Balance scale b/w drive and pivot    (   0..1   )
+    # Calculate Drive Turn output due to Joystick X input
+    if(y>=50):
+      # Forward
+        nMotPremixL = 100.0 if x>=0 else 100.0 + x
+        nMotPremixR = 100.0 - x if x>=0 else 100.0
+    else:
+        # Reverse
+        nMotPremixL = 100.0 - x if x>=0 else 100.0
+        nMotPremixR = 100.0 if x>=0 else 100.0 + x
+
+    # Scale Drive output due to Joystick Y input (throttle)
+    nMotPremixL = nMotPremixL * y/100.0
+    nMotPremixR = nMotPremixR * y/100.0
+
+    # Now calculate pivot amount
+    #  - Strength of pivot (nPivSpeed) based on Joystick X input
+    #  - Blending of pivot vs drive (fPivScale) based on Joystick Y input
+    nPivSpeed = x
+    fPivScale = 0.0 if abs(y)>fPivYLimit else (1.0-abs(y)/fPivYLimit)
+
+    # Calculate final mix of Drive and Pivot
+    nMotMixL = int((1.0-fPivScale)*nMotPremixL + fPivScale*( nPivSpeed)) # Motor (left)  mixed output           (-128..+127)
+    nMotMixR = int((1.0-fPivScale)*nMotPremixR + fPivScale*(-nPivSpeed)) # Motor (right) mixed output           (-128..+127)
+    
+    robot.left_motor.value = nMotMixL * 0.00188
+    robot.right_motor.value = nMotMixR * 0.0020
 
 angle = 0.0
 
@@ -129,32 +162,33 @@ def execute(cam):
     start_time = time.time()
     image = cam['new']
     xy = model(preprocess(image)).detach().float().cpu().numpy().flatten()
-    x = xy[0]
-    y = (0.5 - xy[1]) / 2.0
+    x = xy[0] * 50 + 50
+    y = xy[1] * 50 + 50
+    calculateAngle(x,y)
+    print("x: ", xy[0])
+    print("y: ", xy[1])
     
-
     
     
-    
-    angle = np.arctan2(x, y)
-    pid = angle * steering_gain_slider 
-    # angle_last = angle    
-    robot.left_motor.value = max(min(speed + pid, 1.0), 0.0)
-    robot.right_motor.value = max(min(speed - pid, 1.0), 0.0)
-    timeOneIteration = time.time() - start_time
-    print("Pirmais", xy[0])
-    print(xy[1])
-    print(y)
-    print(angle)
-    print("PID", pid)
-    print(timeOneIteration)
+#     angle = np.arctan2(x, y)
+#     pid = angle * steering_gain_slider 
+#     # angle_last = angle    
+#     robot.left_motor.value = max(min(speed + pid, 1.0), 0.0)
+#     robot.right_motor.value = max(min(speed - pid, 1.0), 0.0)
+#     timeOneIteration = time.time() - start_time
+#     print("Pirmais", xy[0])
+#     print(xy[1])
+#     print(y)
+#     print(angle)
+#     print("PID", pid)
+#     print(timeOneIteration)
     
 execute({'new': camera.value})
 
 camera.observe(execute, names='value')
 
 
-time.sleep(120)
+time.sleep(240)
 
 camera.unobserve(execute, names='value')
 time.sleep(0.1)
