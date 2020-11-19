@@ -1,0 +1,23 @@
+things required to install on JETBOT
+
+follow this:
+https://jetbot.org/master/software_setup/sd_card.html
+
+then:
+cd $HOME
+git clone https://github.com/NVIDIA-AI-IOT/torch2trt
+cd torch2trt
+sudo python3 setup.py install
+
+
+
+
+then on Jetbot:
+
+install pytorch new version:
+
+
+wget https://nvidia.box.com/shared/static/wa34qwrwtk9njtyarwt5nvo6imenfy26.whl -O torch-1.7.0-cp36-cp36m-linux_aarch64.whl
+sudo apt-get install python3-pip libopenblas-base libopenmpi-dev 
+pip3 install Cython
+pip3 install numpy torch-1.7.0-cp36-cp36m-linux_aarch64.whl

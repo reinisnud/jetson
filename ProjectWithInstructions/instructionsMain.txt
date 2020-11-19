@@ -1,0 +1,9 @@
+Get the jetbot ready- by following jetbot.txt
+
+unzip dataset
+To run augmentations run augmentation jupyter notebook
+to train model run trainingNEW.py or use best_steering_model_xyResnetMoreLs100.pth already trained
+
+
+to just run on jetbot with pretrained model, 
+copy JetbotFiles to jetbot and run demoMoreLs.py
