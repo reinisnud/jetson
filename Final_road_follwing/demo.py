@@ -88,7 +88,7 @@ std = torch.Tensor([0.229, 0.224, 0.225]).cuda().half()
 
 def preprocess(image):
     image = PIL.Image.fromarray(image)
-    image = transforms.functional.resize(image, (112, 112))
+    image = transforms.functional.resize(image, (224, 224))
 
     image = transforms.functional.to_tensor(image).to(device).half()
     image.sub_(mean[:, None, None]).div_(std[:, None, None])

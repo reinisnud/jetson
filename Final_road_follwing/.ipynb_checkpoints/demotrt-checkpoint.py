@@ -80,20 +80,7 @@ import torch
 from torch2trt import TRTModule
 device = torch.device('cuda')
 model_trt = TRTModule()
-model_trt.load_state_dict(torch.load('best_steering_model_xy_trt.pth'))
-
-
-
-
-
-
-
-
-
-
-
-
-
+model_trt.load_state_dict(torch.load('best_steering_model_xyResnet100.10.1V2_trt.pth'))
 
 import torchvision.transforms as transforms
 import torch.nn.functional as F
@@ -106,11 +93,12 @@ std = torch.Tensor([0.229, 0.224, 0.225]).cuda().half()
 
 def preprocess(image):
     image = PIL.Image.fromarray(image)
-    image = transforms.functional.resize(image, (112, 112))
+    image = transforms.functional.resize(image, (224, 224))
+    img_yuv = image.convert('YCbCr')
 
-    image = transforms.functional.to_tensor(image).to(device).half()
-    image.sub_(mean[:, None, None]).div_(std[:, None, None])
-    return image[None, ...]
+    img_yuv = transforms.functional.to_tensor(img_yuv).to(device).half()
+    img_yuv.sub_(mean[:, None, None]).div_(std[:, None, None])
+    return img_yuv[None, ...]
 
 
 from IPython.display import display
@@ -135,9 +123,10 @@ speed = 0.16
 steering_gain_slider = 0.03
 steering_dgain_slider = 0 
 steering_bias_slider = 0
+y=75
 
-
-def calculateAngle(x,y):
+def calculateAngle(x):#,y):
+    global y
     fPivYLimit = 80
 
     # TEMP VARIABLES
@@ -181,10 +170,10 @@ def execute(cam):
     image = cam['new']
     xy = model_trt(preprocess(image)).detach().float().cpu().numpy().flatten()
     x = xy[0] * 50
-    y = xy[1] * 50 + 50
-    calculateAngle(x,y)
+#     y = xy[1] * 50 + 50
+    calculateAngle(x)
     print("x: ", xy[0])
-    print("y: ", xy[1])
+#     print("y: ", xy[1])
     
     
     
